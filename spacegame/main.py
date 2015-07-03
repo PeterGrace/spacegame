@@ -2,7 +2,9 @@
 import click
 import logging
 import sys
-from spacegame.Server import Server
+import time
+from spacegame.Network import Server
+from spacegame.Parser import Parser
 
 
 @click.command()
@@ -19,12 +21,25 @@ def main():
     logger.addHandler(log_hdlr)
 
     # TODO: database?
+
+    logger.info('Bringing up command parser...')
+    MainParser = Parser()
+
     # TODO: bring up Universe
 
-    print "Enter any input to quit."
-    server = Server.MUDServer(port=5281)
-    server.run()
+    logger.info('Bringing up TCPServer...')
+    TCPServer = Network.Server(port=5281)
+    TCPServer.run()
 
+    # main game loop
+    running = True
+    logger.info('And the universe sprang forth with life and legend!')
+    while running:
+        # not trying to kill the cpu during this part of the dev process
+        time.sleep(0.25)
+
+    logger.info('The universe is currently collapsing...')
+    # TODO: shutdown nicely
 
 if __name__ == '__main__':
     main()

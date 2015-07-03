@@ -2,12 +2,11 @@
 
 import select
 import socket
-import sys
 import threading
 import logging
 
 
-class MUDServer(object):
+class Server(threading.Thread):
     def __init__(self, logger=None, *args, **kwargs):
         self._host = kwargs.get('host', '0.0.0.0')
         self._port = kwargs.get('port', 5280)
@@ -18,9 +17,10 @@ class MUDServer(object):
         self._server = None
         self._threads = []
 
+        self.running = False
         self.logger = logging.getLogger('main.%s' % (self.__class__.__name__,))
 
-    def _bind_socket(self):
+    def bind_socket(self):
         try:
             self._server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._server.bind((self._host, self._port))
@@ -29,15 +29,14 @@ class MUDServer(object):
             if self._server:
                 self._server.close()
             self.logger.critical("Could not open server socket: %s", message)
-            sys.exit(1)
+            raise
 
     def run(self):
-        self._bind_socket()
-        input_fds = [self._server, sys.stdin]
-        running = 1
-        while running:
-            inputready, outputready, exceptready = select.select(input_fds, [], [])
-
+        self.bind_socket()
+        self.running = True
+        while self.running:
+            inputready, outputready, exceptready = select.select([self._server],
+                                                                 [], [])
             for s in inputready:
                 if s == self._server:
                     # accept connection and spawn off player thread
@@ -48,11 +47,6 @@ class MUDServer(object):
                                      c.address[0], c.address[1])
                     c.start()
                     self._threads.append(c)
-
-                elif s == sys.stdin:
-                    # TODO: console commands
-                    junk = sys.stdin.readline()
-                    running = 0
 
             # thread cleanup
             for c in self._threads:
@@ -83,7 +77,7 @@ class Client(threading.Thread):
                                                         self.clientid))
 
     def join(self, timeout=None):
-        self.client.send("Server is terminating.\n")
+        self.client.send("Connection is terminating.\n")
         self.running = False
         super(Client, self).join(timeout)
 
