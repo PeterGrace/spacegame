@@ -9,7 +9,7 @@ class Universe():
 
     def add_player(self,player):
         try:
-            append(self._players,player)
+            self._players.append(player)
         except KeyError:
             logging.error("add_player: can't add player, kwargs did not contain playername.")
 
