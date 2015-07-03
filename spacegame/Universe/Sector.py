@@ -6,16 +6,15 @@ import logging
 
 class Sector():
 
-    def __init__(self):
-        self._id = 0
-        self._name = ""
+    def __init__(self, **kwargs):
+        self._name = kwargs['sector_name']
         self._stations = []
         self._planets = []
         self._players = []
 
     def player_enter(self, **kwargs):
         try:
-            append(self._players, kwargs['player'])
+            append(self._players, kwargs['player_name'])
             return True
         except KeyError as ex:
             logging.error("player_enter called without player keyword")
@@ -26,5 +25,6 @@ class Sector():
         return self._players
 
     @property
-    def id(self):
-        return self._id
+    def name(self):
+        return self._name
+

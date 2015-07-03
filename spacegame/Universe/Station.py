@@ -1,3 +1,3 @@
 class Station():
     def __init__(self, **kwargs):
-        self._name = kwargs['name']
+        self._name = kwargs['station_name']
