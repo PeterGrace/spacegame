@@ -1,9 +1,9 @@
-from Universe.Sector import Sector
-from Universe.Player import Player
-from Universe.Station import Station
-from Universe.Planet import Planet
-from Universe.Ship import Ship
-from Universe.Universe import Universe
+from spacegame.Universe.Sector import Sector
+from spacegame.Universe.Player import Player
+from spacegame.Universe.Station import Station
+from spacegame.Universe.Planet import Planet
+from spacegame.Universe.Ship import Ship
+from spacegame.Universe.Universe import Universe
 
 def test_new_sector():
     sector = Sector()
