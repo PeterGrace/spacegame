@@ -7,6 +7,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'click',
+        'tox',
+        'nose',
     ],
     entry_points='''
         [console_scripts]
