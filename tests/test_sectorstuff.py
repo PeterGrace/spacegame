@@ -18,5 +18,19 @@ def test_add_player():
     universe.add_player(player)
     assert(player.name in universe.players.keys())
 
+def test_add_station_to_sector():    
+    universe = Universe()
+    sector = Sector(sector_name='Test Sector')
+    station = Station(station_name='Test Station')
+    sector.add_station(station)
+    universe.add_sector(sector)
+    assert(station in sector.stations)
+
 def test_add_planet_to_sector():    
-    pass
+    universe = Universe()
+    sector = Sector(sector_name='Test Sector')
+    planet = Station(station_name='Test Planet')
+    sector.add_planet(planet)
+    universe.add_sector(sector)
+    assert(planet in sector.planets)
+
