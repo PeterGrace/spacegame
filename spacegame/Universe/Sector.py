@@ -11,7 +11,7 @@ class Sector():
         self._stations = []
         self._planets = []
         self._players = []
-        self._adjoining_sectors = []
+        self._adjacent_sectors = []
 
     def player_enter(self, player):
             self._players.append(player)
@@ -24,6 +24,9 @@ class Sector():
     def add_planet(self, planet):
             self._planets.append(planet)
             return True
+
+    def add_link(self, sector):
+            self._adjacent_sectors.append(sector)
             
     @property
     def players(self):
@@ -40,3 +43,7 @@ class Sector():
     @property
     def planets(self):
         return self._planets    
+
+    @property
+    def adjacent_sectors(self):
+        return self._adjacent_sectors
