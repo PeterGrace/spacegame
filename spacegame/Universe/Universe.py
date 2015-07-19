@@ -22,6 +22,13 @@ class Universe():
         except KeyError:
             logging.error("add_sector: can't add sector, kwargs did not contain"
                           " sectorname.")
+
+    def get_sector(self, sector):
+        if sector in self._map.keys():
+            return self._map[sector]
+        else:
+            return None
+
     @property
     def players(self):
         return self._players
@@ -29,3 +36,4 @@ class Universe():
     @property
     def map(self):
         return self._map    
+
