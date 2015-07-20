@@ -38,7 +38,6 @@ def bang_sector(sector):
     return newsector
 
 def check_adjacency(prospective_link):
-
     try:
         sector=u.map[prospective_link]
         if len(sector.adjacent_sectors) >= MAX_LINKS:
@@ -62,11 +61,16 @@ def link_sectors(previous,current):
     sector_A=u.map[previous]
     sector_B=u.map[current]
 
+    if len(sector_A.adjacent_sectors) > MAX_LINKS:
+        raise Exception
     sector_A.add_link(sector_B)
-    sector_B.add_link(sector_A)
 
-UNIVERSE_SIZE=1000
-MAX_LINKS=6
+    sector_B.add_link(sector_A)
+    if len(sector_A.adjacent_sectors) > MAX_LINKS:
+        raise Exception
+
+UNIVERSE_SIZE=100
+MAX_LINKS=10
 
 listen()
 u=Universe.Universe()
@@ -74,17 +78,24 @@ u=Universe.Universe()
 prev_sector_id=bang_sector(get_new_sector())
 
 while len(u.map.keys()) <= UNIVERSE_SIZE:
-    sector_id=bang_sector(get_new_sector())
+    p=get_new_sector()
+    while check_adjacency(p) == False:
+        p=get_new_sector()
+        
+    sector_id=bang_sector(p)
     if sector_id is None:
         break
+    if check_adjacency(prev_sector_id) == False:
+        prev_sector_id=bang_sector(get_new_sector())
     link_sectors(prev_sector_id,sector_id)
     numlinks=random.randint(1,MAX_LINKS)
     size=len(u.map.keys())
     print("Added sector {sector}.  Universe now {size} sectors big.".format(sector=sector_id,size=size))
-    for j in range(1,numlinks):
+    for j in range(0,numlinks):
+        if check_adjacency(sector_id) == False:
+            print("Adjacency violation in numlinks.  Count in sector_id={c}".format(c=len(u.map[sector_id].adjacent_sectors)))
+            break
         potential_id=get_new_sector()
-        while check_adjacency(potential_id) == False:
-            sector_id=get_new_sector()
         link_sector_id=bang_sector(potential_id)
         if link_sector_id is None:
             break
