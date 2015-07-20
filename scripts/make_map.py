@@ -5,6 +5,7 @@ import pickle
 import pdb
 from spacegame.Universe import Universe, Sector
 import code, traceback, signal
+import networkx as nx
 
 def debug(sig, frame):
     """Interrupt running process, and provide a python prompt for
@@ -69,7 +70,40 @@ def link_sectors(previous,current):
     if len(sector_A.adjacent_sectors) > MAX_LINKS:
         raise Exception
 
-UNIVERSE_SIZE=100
+def link_orphans():
+    G = nx.Graph()
+    linklist=[]
+
+    for sect_id in u.map.keys():
+        G.add_node(u.map[sect_id].name)
+        for adj in u.map[sect_id].adjacent_sectors:
+            G.add_edge(sect_id,adj.name)
+
+    if not nx.is_connected(G):
+        sub_graphs=nx.connected_component_subgraphs(G)
+        for sg in sub_graphs:
+            linklist.append(sg.nodes()[random.randint(0,len(sg.nodes()))-1])
+
+    if len(linklist) >= 2:
+        try:
+            link_sectors(linklist[0],linklist[1])
+            print("Linking sector {0} to sector {1}".format(linklist[0],linklist[1]))
+        except Exception:
+            return False    
+        if len(linklist) == 2:
+            return True
+        else:
+            return False
+    else:
+        return True           
+
+
+                
+
+
+        
+
+UNIVERSE_SIZE=5000
 MAX_LINKS=10
 
 listen()
@@ -102,4 +136,9 @@ while len(u.map.keys()) <= UNIVERSE_SIZE:
         link_sectors(sector_id, link_sector_id)
         size=len(u.map.keys())
         print("Added adjacency count {j} of sector {s} in {sector}.  Universe now {size} sectors big.".format(sector=sector_id,j=j,s=link_sector_id,size=size))
+
+foo = link_orphans()
+while foo == False:
+    foo = link_orphans()
+
 pickle.dump( u, open( "universe.p", "wb" ) )
