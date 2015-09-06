@@ -8,6 +8,7 @@ class Sector():
 
     def __init__(self, **kwargs):
         self._name = kwargs['sector_name']
+        self._nicename = ''
         self._stations = []
         self._planets = []
         self._players = []
@@ -27,6 +28,10 @@ class Sector():
 
     def add_link(self, sector):
             self._adjacent_sectors.append(sector)
+
+    def set_nice_name(self, name):        
+            self._nicename=name
+            return True
             
     @property
     def players(self):
@@ -35,6 +40,10 @@ class Sector():
     @property
     def name(self):
         return self._name
+
+    @property
+    def nice_name(self):
+        return self._nicename
 
     @property
     def stations(self):

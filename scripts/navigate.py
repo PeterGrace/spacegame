@@ -20,7 +20,7 @@ for sect_id in u.map.keys():
 mysector=1
 while True:
     jumps=[]
-    print "You are in sector {mysector}, you can jump to these sectors:".format(mysector=mysector)
+    print "You are in {sector} [{mysector}], you can jump to these sectors:".format(sector=u.map[mysector].nice_name,mysector=mysector)
     for adj in u.map[mysector].adjacent_sectors:
         print "Sector: {s}".format(s=adj.name)
         jumps.append(adj.name)

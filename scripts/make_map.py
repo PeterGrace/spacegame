@@ -7,6 +7,23 @@ from spacegame.Universe import Universe, Sector
 import code, traceback, signal
 import networkx as nx
 
+
+major_types = ['Cluster', 'Nebula', 'Formation']
+proper_names = [ 'Ursa', 'Lupus', 'Taurus', 'Virgo', 'Libra', 'Scorpio', 'Scylla', 'Charybdis', 'Bellatrix', 'Cormorant', 'Alba', 'Betta', 'Gamma', 'Delta', 'Epsilon', 'Corinth', 'Coriolis', 'Nasdem', 'Nautai', 'Pirata', 'Patria', 'Semprus', 'Cotton']
+
+def make_sector_name():
+    major=major_types[random.randint(0,len(major_types)-1)]
+    proper_major=proper_names[random.randint(0,len(proper_names)-1)]
+
+    match=True
+    while match == True:
+        proper_system=proper_names[random.randint(0,len(proper_names)-1)]
+        if (cmp(proper_system,proper_major)!=0):
+            match=False
+    return "{major} {classification}, {system} System".format(major=proper_major, classification=major, system=proper_system)
+
+
+
 def debug(sig, frame):
     """Interrupt running process, and provide a python prompt for
     interactive debugging."""
@@ -34,7 +51,9 @@ def bang_sector(sector):
         if len(u.map.keys()) >= UNIVERSE_SIZE:
             return None
 
+    sector_name=make_sector_name()
     s=Sector.Sector(sector_name=newsector)
+    s.set_nice_name(sector_name)
     u.add_sector(s)
     return newsector
 
