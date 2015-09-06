@@ -4,3 +4,5 @@
 .komodotools/
 spacegame.komodoproject
 universe.p
+*.png
+*.path
