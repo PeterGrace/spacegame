@@ -2,7 +2,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import pickle
-from make_map import UNIVERSE_SIZE
 
 with open("universe.p","rb") as f:
     u=pickle.Unpickler(f).load()
